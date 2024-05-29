@@ -1,0 +1,58 @@
+name: LifeTime Deployment
+description: Deploys OutSystems Applications to target Environment
+
+inputs:
+  source-environment-label:
+    required: true
+    type: string
+  destination-environment-label:
+    required: true
+    type: string
+  include-test-applications:
+    type: boolean
+    default: false
+  use-2step-deployment:
+    type: boolean
+    default: false
+  
+runs: 
+  using: "composite"
+  steps:
+
+    # Download current pipeline artifacts
+    - name: 'Download trigger manifest artifact'
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ env.MANIFEST_FOLDER }}
+
+    # ******************************************************************
+    # Step: Deploy to target environment (using manifest)
+    # ******************************************************************
+    # Deploy application list to target environment using manifest
+    # ******************************************************************
+    - name: 'Deploy to ${{ inputs.destination-environment-label }} environment'
+      if: ${{ inputs.include-test-applications == 'true' }}
+      shell: bash
+      run: >
+        python -m outsystems.pipeline.deploy_tags_to_target_env_with_manifest
+        --artifacts "${{ github.workspace }}" 
+        --lt_url ${{ env.LIFETIME_HOSTNAME }}
+        --lt_token ${{ env.LIFETIME_SERVICEACCOUNTTOKEN }}
+        --lt_api_version ${{ env.LIFETIME_APIVERSION }}
+        --source_env_label "${{ inputs.source-environment-label }}"
+        --destination_env_label "${{ inputs.destination-environment-label }}"
+        --include_test_apps
+        --manifest_file "${{ env.MANIFEST_FILE }}"
+
+    - name: 'Deploy to ${{ inputs.destination-environment-label }} environment'
+      if: ${{ inputs.include-test-applications == 'false' }}
+      shell: bash
+      run: >
+        python -m outsystems.pipeline.deploy_tags_to_target_env_with_manifest
+        --artifacts "${{ github.workspace }}" 
+        --lt_url ${{ env.LIFETIME_HOSTNAME }}
+        --lt_token ${{ env.LIFETIME_SERVICEACCOUNTTOKEN }}
+        --lt_api_version ${{ env.LIFETIME_APIVERSION }}
+        --source_env_label "${{ inputs.source-environment-label }}"
+        --destination_env_label "${{ inputs.destination-environment-label }}"
+        --manifest_file "${{ env.MANIFEST_FILE }}" 

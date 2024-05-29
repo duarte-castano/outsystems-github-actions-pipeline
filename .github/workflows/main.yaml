@@ -1,0 +1,57 @@
+# ******************************************************************
+# Template: CD-GitHubAgent
+# ******************************************************************
+# Baseline Continuous Delivery pipeline template that leverages 
+# GitHub-hosted agents (i.e. each Job runs on a dedicated agent)
+# ******************************************************************
+
+name: CD-Pipeline
+
+# Controls when the action will run
+on:
+  # Allows external trigger
+  repository_dispatch:
+    type: run-pipeline-api
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      trigger-manifest:
+        description: 'Manifest as JSON'
+        required: true
+        type: string
+#      triggered-by:
+#        description: 'Username that triggered the workflow'
+#        required: false
+#        type: string
+
+jobs:
+
+  publish-trigger-manifest:
+    uses: ./.github/workflows/publish-trigger-manifest.yaml
+    with:
+      trigger-manifest: ${{ inputs.trigger-manifest }}
+
+  regression-testing:
+    runs-on: ubuntu-latest
+    needs: [publish-trigger-manifest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/install-python-package
+        env:
+          PYTHON_VERSION: ${{ vars.PYTHON_VERSION }}
+          OSPACKAGE_VERSION: ${{ vars.OSPACKAGE_VERSION }}
+
+      - uses: ./.github/actions/lifetime-deployment
+#        secrets: inherit
+        env:
+          MANIFEST_FILE: ${{ vars.MANIFEST_FILE }}
+          MANIFEST_FOLDER: ${{ vars.MANIFEST_FOLDER }}
+          LIFETIME_SERVICEACCOUNTTOKEN: ${{ secrets.LIFETIME_SERVICEACCOUNTTOKEN }}
+          LIFETIME_HOSTNAME: ${{ vars.LIFETIME_HOSTNAME }}
+          LIFETIME_APIVERSION: ${{ vars.LIFETIME_APIVERSION }}
+        with:
+          source-environment-label: ${{ vars.ENVIRONMENT_DEVELOPMENT_LABEL }}
+          destination-environment-label: ${{ vars.ENVIRONMENT_REGRESSION_LABEL }}
+          include-test-applications: true

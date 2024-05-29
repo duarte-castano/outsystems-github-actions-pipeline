@@ -5,6 +5,14 @@ runs:
   using: "composite"
   steps:
 
+    - name: Create artifacts folder
+      shell: bash
+      run: mkdir -p ${{ env.ArtifactsFolder }}
+
+    - name: Create trigger manifest folder
+      shell: bash
+      run: mkdir -p ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
+
     - name: Write trigger manifest content to a file
       shell: bash
       run: echo '${{ github.event.inputs.TriggerManifest }}' > ${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}

@@ -6,6 +6,7 @@ runs:
   steps:
 
     - name: Write trigger manifest content to a file
+      shell: bash
       run: echo '${{ github.event.inputs.TriggerManifest }}' > ${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}
 
     - name: Publish trigger manifest

@@ -35,9 +35,6 @@ jobs:
         uses: actions/checkout@v4
 
       - uses: ./.github/actions/install-python-package
-        #env:
-         # PYTHON_VERSION: ${{ vars.PYTHON_VERSION }}
-          #OSPACKAGE_VERSION: ${{ vars.OSPACKAGE_VERSION }}
 
       - uses: ./.github/actions/publish-trigger-manifest
 

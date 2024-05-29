@@ -11,11 +11,6 @@ runs:
   using: "composite"
   steps:
 
-    # Download current pipeline artifacts
-    - uses: ./.github/actions/download-trigger-manifest
-
-    - uses: ./.github/actions/install-python-package
-
     # ******************************************************************
     # Step: Apply configuration values
     # ******************************************************************

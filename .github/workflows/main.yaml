@@ -5,7 +5,7 @@
 # GitHub-hosted agents (i.e. each Job runs on a dedicated agent)
 # ******************************************************************
 
-name: CD-Pipeline
+name: Old
 
 # Controls when the action will run
 on:

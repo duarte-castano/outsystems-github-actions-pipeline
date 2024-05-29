@@ -1,0 +1,31 @@
+name: CD-Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      TriggerManifest:
+        description: 'Trigger manifest artifact (in JSON format) for the current pipeline run.'
+        required: true
+        type: string
+      TriggeredBy:
+        description: 'Name of LifeTime user that triggered the pipeline remotely.'
+        required: false
+        type: string
+
+
+jobs:
+  get_and_deploy_latest_tags:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/install-python-package
+
+      - uses: ./.github/actions/publish-trigger-manifest
+
+      - uses: ./.github/actions/lifetime-deployment
+        with:
+          source-environment-label: ${{ vars.ENVIRONMENT_DEVELOPMENT_LABEL }}
+          destination-environment-label: ${{ vars.ENVIRONMENT_REGRESSION_LABEL }}
+          include-test-applications: true

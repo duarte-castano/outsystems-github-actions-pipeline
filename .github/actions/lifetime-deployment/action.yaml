@@ -20,10 +20,9 @@ runs:
   steps:
 
     # Download current pipeline artifacts
-    - name: 'Download trigger manifest artifact'
-      uses: actions/download-artifact@v3
-      with:
-        name: ${{ env.MANIFEST_FOLDER }}
+    - uses: ./.github/actions/download-trigger-manifest
+
+    - uses: ./.github/actions/install-python-package
 
     # ******************************************************************
     # Step: Deploy to target environment (using manifest)
@@ -32,27 +31,47 @@ runs:
     # ******************************************************************
     - name: 'Deploy to ${{ inputs.destination-environment-label }} environment'
       if: ${{ inputs.include-test-applications == 'true' }}
-      shell: bash
       run: >
         python -m outsystems.pipeline.deploy_tags_to_target_env_with_manifest
-        --artifacts "${{ github.workspace }}" 
+        --artifacts "${{ env.ARTIFACTS_FOLDER }}" 
         --lt_url ${{ env.LIFETIME_HOSTNAME }}
-        --lt_token ${{ env.LIFETIME_SERVICEACCOUNTTOKEN }}
-        --lt_api_version ${{ env.LIFETIME_APIVERSION }}
+        --lt_token ${{ secrets.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
+        --lt_api_version ${{ env.LIFETIME_API_VERSION }}
         --source_env_label "${{ inputs.source-environment-label }}"
         --destination_env_label "${{ inputs.destination-environment-label }}"
         --include_test_apps
-        --manifest_file "${{ env.MANIFEST_FILE }}"
+        --manifest_file "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}"
 
     - name: 'Deploy to ${{ inputs.destination-environment-label }} environment'
       if: ${{ inputs.include-test-applications == 'false' }}
-      shell: bash
       run: >
         python -m outsystems.pipeline.deploy_tags_to_target_env_with_manifest
-        --artifacts "${{ github.workspace }}" 
+        --artifacts "${{ env.ARTIFACTS_FOLDER }}" 
         --lt_url ${{ env.LIFETIME_HOSTNAME }}
-        --lt_token ${{ env.LIFETIME_SERVICEACCOUNTTOKEN }}
-        --lt_api_version ${{ env.LIFETIME_APIVERSION }}
+        --lt_token ${{ secrets.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
+        --lt_api_version ${{ env.LIFETIME_API_VERSION }}
         --source_env_label "${{ inputs.source-environment-label }}"
         --destination_env_label "${{ inputs.destination-environment-label }}"
-        --manifest_file "${{ env.MANIFEST_FILE }}" 
+        --manifest_file "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}"
+
+    # ******************************************************************
+    # Step: Apply configuration values
+    # ******************************************************************
+    # Apply configuration values (if any) to target environment
+    # ******************************************************************
+    - uses: ./.github/actions/apply-configuration-values
+      if: ${{ inputs.use-2step-deployment == 'false' }}
+      with:
+        target-environment-label: ${{ inputs.destination-environment-label }}
+
+    # ******************************************************************
+    # Step: Publish deployment conflicts
+    # ******************************************************************
+    # Check if there any Deployment Conflicts and archive it
+    # ******************************************************************
+    - name: Archive deployment conflicts on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: DeploymentConflicts
+        path: ${{ env.ARTIFACTS_FOLDER }}/DeploymentConflicts

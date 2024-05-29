@@ -100,7 +100,7 @@ jobs:
         run: mkdir -p ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
 
       - name: Unstash trigger manifest
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: trigger_manifest
           path: ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
@@ -149,7 +149,7 @@ jobs:
         run: mkdir -p ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
 
       - name: Unstash trigger manifest
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: trigger_manifest
           path: ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
@@ -204,7 +204,7 @@ jobs:
         run: mkdir -p ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
 
       - name: Unstash trigger manifest
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: trigger_manifest
           path: ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
@@ -259,7 +259,7 @@ jobs:
         run: mkdir -p ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
 
       - name: Unstash trigger manifest
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: trigger_manifest
           path: ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}

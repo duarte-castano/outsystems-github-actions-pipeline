@@ -8,8 +8,8 @@ runs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ vars.PYTHON_VERSION }}
+        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install required packages
       shell: bash
-      run: pip install -U outsystems-pipeline==${{ vars.OS_PACKAGE_VERSION }}
+      run: pip install -U outsystems-pipeline==${{ env.OS_PACKAGE_VERSION }}

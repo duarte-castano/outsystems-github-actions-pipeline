@@ -7,11 +7,11 @@ runs:
 
     - name: Create artifacts folder
       shell: bash
-      run: mkdir -p ${{ env.ArtifactsFolder }}
+      run: mkdir -p ${{ env.ARTIFACTS_FOLDER }}
 
     - name: Create trigger manifest folder
       shell: bash
-      run: mkdir -p ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
+      run: mkdir -p ${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}
 
     - name: Write trigger manifest content to a file
       shell: bash

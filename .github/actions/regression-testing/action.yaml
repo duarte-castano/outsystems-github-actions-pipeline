@@ -30,8 +30,8 @@ runs:
         python -m outsystems.pipeline.scan_test_endpoints
         --artifacts "${{ env.ARTIFACTS_FOLDER }}"
         --manifest_file "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}"
-        --cicd_probe_env "${{ env.CICDProbeEnvironmentURL }}"
-        --bdd_framework_env "${{ env.BDDFrameworkEnvironmentURL }}"
+        --cicd_probe_env "${{ env.CICD_PROBE_ENVIRONMENT_URL }}"
+        --bdd_framework_env "${{ env.BDD_FRAMEWORK_ENVIRONMENT_URL }}"
 
     - name: Run BDD test suites and generate JUnit test report
       shell: bash

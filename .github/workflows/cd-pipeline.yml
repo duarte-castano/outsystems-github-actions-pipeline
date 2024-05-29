@@ -1,4 +1,4 @@
-name: CD-Pipeline
+name: GitHub-CD-Pipeline
 
 on:
   workflow_dispatch:

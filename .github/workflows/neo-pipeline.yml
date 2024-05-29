@@ -33,10 +33,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.11
 
@@ -74,14 +74,14 @@ jobs:
             --manifest_file "${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}/${{ env.ManifestFile }}"
 
       - name: Stash trigger manifest
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: trigger_manifest
           path: ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}/${{ env.ManifestFile }}
 
       - name: Archive deployment conflicts on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: DeploymentConflicts
           path: ${{ env.ArtifactsFolder }}/DeploymentConflicts
@@ -91,7 +91,7 @@ jobs:
     needs: get_and_deploy_latest_tags
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create artifacts folder
         run: mkdir ${{ env.ArtifactsFolder }}
@@ -106,7 +106,7 @@ jobs:
           path: ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -140,7 +140,7 @@ jobs:
     needs: run_regression
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create artifacts folder
         run: mkdir ${{ env.ArtifactsFolder }}
@@ -155,7 +155,7 @@ jobs:
           path: ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -184,7 +184,7 @@ jobs:
 
       - name: Archive deployment conflicts on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: DeploymentConflicts
           path: ${{ env.ArtifactsFolder }}/DeploymentConflicts
@@ -195,7 +195,7 @@ jobs:
     environment: pre-env
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create artifacts folder
         run: mkdir ${{ env.ArtifactsFolder }}
@@ -210,7 +210,7 @@ jobs:
           path: ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -239,7 +239,7 @@ jobs:
 
       - name: Archive deployment conflicts on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: DeploymentConflicts
           path: ${{ env.ArtifactsFolder }}/DeploymentConflicts
@@ -250,7 +250,7 @@ jobs:
     environment: prd-env
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create artifacts folder
         run: mkdir ${{ env.ArtifactsFolder }}
@@ -265,7 +265,7 @@ jobs:
           path: ${{ env.ArtifactsFolder }}/${{ env.ManifestFolder }}
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -294,7 +294,7 @@ jobs:
 
       - name: Archive deployment conflicts on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: DeploymentConflicts
           path: ${{ env.ArtifactsFolder }}/DeploymentConflicts

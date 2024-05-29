@@ -28,18 +28,25 @@ env:
   PYTHON_VERSION: ${{ vars.PYTHON_VERSION }}
 
 jobs:
+
+
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/publish-trigger-manifest
+
+
   get_and_deploy_latest_tags:
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - uses: ./.github/actions/install-python-package
 
-      - uses: ./.github/actions/publish-trigger-manifest
-
       - uses: ./.github/actions/lifetime-deployment
         with:
-          source-environment-label: ${{ vars.ENVIRONMENT_DEVELOPMENT_LABEL }}
-          destination-environment-label: ${{ vars.ENVIRONMENT_REGRESSION_LABEL }}
+          source-environment-label: ${{ env.ENVIRONMENT_DEVELOPMENT_LABEL }}
+          destination-environment-label: ${{ env.ENVIRONMENT_REGRESSION_LABEL }}
           include-test-applications: true

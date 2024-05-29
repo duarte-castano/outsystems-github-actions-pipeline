@@ -34,27 +34,27 @@ runs:
       shell: bash
       run: >
         python -m outsystems.pipeline.deploy_tags_to_target_env_with_manifest
-        --artifacts "${{ vars.ARTIFACTS_FOLDER }}" 
-        --lt_url ${{ vars.LIFETIME_HOSTNAME }}
+        --artifacts "${{ env.ARTIFACTS_FOLDER }}" 
+        --lt_url ${{ env.LIFETIME_HOSTNAME }}
         --lt_token ${{ secrets.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
-        --lt_api_version ${{ vars.LIFETIME_API_VERSION }}
+        --lt_api_version ${{ env.LIFETIME_API_VERSION }}
         --source_env_label "${{ inputs.source-environment-label }}"
         --destination_env_label "${{ inputs.destination-environment-label }}"
         --include_test_apps
-        --manifest_file "${{ vars.ARTIFACTS_FOLDER }}/${{ vars.MANIFEST_FOLDER }}/${{ vars.MANIFEST_FILE }}"
+        --manifest_file "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}"
 
     - name: 'Deploy to ${{ inputs.destination-environment-label }} environment'
       if: ${{ inputs.include-test-applications == 'false' }}
       shell: bash
       run: >
         python -m outsystems.pipeline.deploy_tags_to_target_env_with_manifest
-        --artifacts "${{ vars.ARTIFACTS_FOLDER }}" 
-        --lt_url "${{ vars.LIFETIME_HOSTNAME }}"
+        --artifacts "${{ env.ARTIFACTS_FOLDER }}" 
+        --lt_url "${{ env.LIFETIME_HOSTNAME }}"
         --lt_token ${{ secrets.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
-        --lt_api_version "${{ vars.LIFETIME_API_VERSION }}"
+        --lt_api_version "${{ env.LIFETIME_API_VERSION }}"
         --source_env_label "${{ inputs.source-environment-label }}"
         --destination_env_label "${{ inputs.destination-environment-label }}"
-        --manifest_file "${{ vars.ARTIFACTS_FOLDER }}/${{ vars.MANIFEST_FOLDER }}/${{ vars.MANIFEST_FILE }}"
+        --manifest_file "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}"
 
     # ******************************************************************
     # Step: Apply configuration values

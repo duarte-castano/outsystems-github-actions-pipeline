@@ -6,9 +6,11 @@ runs:
   steps:
 
     - name: Create artifacts folder
+      shell: bash
       run: mkdir ${{ env.ARTIFACTS_FOLDER }}
 
     - name: Create trigger manifest folder
+      shell: bash
       run: mkdir -p ${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}
 
     - name: Unstash trigger manifest

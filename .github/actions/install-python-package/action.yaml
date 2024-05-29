@@ -1,14 +1,13 @@
 name: Install Python Package
-description: Install outsystems-pipeline package from PyPI repository
+description: Install outsystems-pipeline from PyPI
 
 runs: 
   using: "composite"
   steps:
     - name: Select python version (${{ env.PYTHON_VERSION }})
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
     - name: 'Install outsystems-pipeline package'
       run: pip install -U outsystems-pipeline==${{ env.OSPACKAGE_VERSION }}
-      shell: bash

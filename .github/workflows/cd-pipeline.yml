@@ -31,7 +31,6 @@ env:
 
 jobs:
 
-
   setup:
     runs-on: ubuntu-latest
     steps:
@@ -47,8 +46,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - uses: ./.github/actions/install-python-package
 
       - uses: ./.github/actions/lifetime-deployment
         with:

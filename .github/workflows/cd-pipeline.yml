@@ -40,7 +40,7 @@ jobs:
       - uses: ./.github/actions/publish-trigger-manifest
 
 
-  get_and_deploy_latest_tags:
+  deploy-regression:
     runs-on: ubuntu-latest
     needs: setup
     steps:
@@ -55,7 +55,7 @@ jobs:
 
   run_regression:
       runs-on: ubuntu-latest
-      needs: get_and_deploy_latest_tags
+      needs: deploy-regression
       steps:
       - name: Checkout code
         uses: actions/checkout@v4

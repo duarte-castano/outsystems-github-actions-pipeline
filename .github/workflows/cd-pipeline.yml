@@ -53,3 +53,12 @@ jobs:
           source-environment-label: ${{ env.ENVIRONMENT_DEVELOPMENT_LABEL }}
           destination-environment-label: ${{ env.ENVIRONMENT_REGRESSION_LABEL }}
           include-test-applications: true
+
+  run_regression:
+      runs-on: ubuntu-latest
+      needs: get_and_deploy_latest_tags
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/regression-testing

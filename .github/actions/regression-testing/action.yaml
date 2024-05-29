@@ -1,0 +1,49 @@
+name: LifeTime Deployment
+description: Deploys OutSystems Applications to target Environment
+
+inputs:
+  source-environment-label:
+    required: true
+    type: string
+  destination-environment-label:
+    required: true
+    type: string
+  include-test-applications:
+    type: boolean
+    default: false
+  use-2step-deployment:
+    type: boolean
+    default: false
+  
+runs: 
+  using: "composite"
+  steps:
+
+    # Download current pipeline artifacts
+    - uses: ./.github/actions/download-trigger-manifest
+
+    - uses: ./.github/actions/install-python-package
+
+    - name: Generate URL endpoints for BDD test suites
+      shell: bash
+      run: >
+        python -m outsystems.pipeline.scan_test_endpoints
+        --artifacts "${{ env.ARTIFACTS_FOLDER }}"
+        --manifest_file "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}"
+        --cicd_probe_env ${{ env.CICDProbeEnvironmentURL }}
+        --bdd_framework_env ${{ env.BDDFrameworkEnvironmentURL }} 
+
+    - name: Run BDD test suites and generate JUnit test report
+      shell: bash
+      run: >
+        python -m outsystems.pipeline.evaluate_test_results
+        --artifacts "${{ env.ARTIFACTS_FOLDER }}"
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        check_run: false
+        comment_mode: off
+        ignore_runs: true
+        files: |
+          ${{ env.ARTIFACTS_FOLDER }}/junit-result.xml

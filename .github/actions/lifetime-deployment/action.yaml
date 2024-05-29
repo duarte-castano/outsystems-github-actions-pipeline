@@ -36,7 +36,7 @@ runs:
         python -m outsystems.pipeline.deploy_tags_to_target_env_with_manifest
         --artifacts "${{ env.ARTIFACTS_FOLDER }}" 
         --lt_url ${{ env.LIFETIME_HOSTNAME }}
-        --lt_token ${{ secrets.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
+        --lt_token ${{ env.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
         --lt_api_version ${{ env.LIFETIME_API_VERSION }}
         --source_env_label "${{ inputs.source-environment-label }}"
         --destination_env_label "${{ inputs.destination-environment-label }}"
@@ -50,7 +50,7 @@ runs:
         python -m outsystems.pipeline.deploy_tags_to_target_env_with_manifest
         --artifacts "${{ env.ARTIFACTS_FOLDER }}" 
         --lt_url "${{ env.LIFETIME_HOSTNAME }}"
-        --lt_token ${{ secrets.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
+        --lt_token ${{ env.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
         --lt_api_version "${{ env.LIFETIME_API_VERSION }}"
         --source_env_label "${{ inputs.source-environment-label }}"
         --destination_env_label "${{ inputs.destination-environment-label }}"

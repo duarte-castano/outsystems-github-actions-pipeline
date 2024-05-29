@@ -1,0 +1,32 @@
+name: Apply configuration values
+description: Apply configuration values (if any) to target environment
+
+inputs:
+  target-environment-label:
+    required: true
+    type: string
+
+  
+runs: 
+  using: "composite"
+  steps:
+
+    # Download current pipeline artifacts
+    - uses: ./.github/actions/download-trigger-manifest
+
+    - uses: ./.github/actions/install-python-package
+
+    # ******************************************************************
+    # Step: Apply configuration values
+    # ******************************************************************
+    # Apply configuration values (if any) to target environment
+    # ******************************************************************
+    - name: 'Apply configuration values in ${{ inputs.target-environment-label }} environment'
+      shell: bash
+      run: >
+        python -m outsystems.pipeline.apply_configuration_values_to_target_env
+        --artifacts "${{ env.ARTIFACTS_FOLDER }}" 
+        --lt_url ${{ env.LIFETIME_HOSTNAME }}
+        --lt_token ${{ env.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
+        --target_env_label "${{ inputs.target-environment-label }}"
+        --manifest_file "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}"

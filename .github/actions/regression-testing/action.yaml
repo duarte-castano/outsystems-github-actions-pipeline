@@ -20,9 +20,9 @@ runs:
   steps:
 
     # Download current pipeline artifacts
-    - uses: ./.github/actions/download-trigger-manifest
+    #- uses: ./.github/actions/download-trigger-manifest
 
-    - uses: ./.github/actions/install-python-package
+    #- uses: ./.github/actions/install-python-package
 
     - name: Generate URL endpoints for BDD test suites
       shell: bash

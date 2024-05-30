@@ -39,7 +39,8 @@ env:
 
 jobs:
 
-  code_analysis:
+  code-analysis:
+    name: Code Analysis
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -51,9 +52,10 @@ jobs:
 
     - uses: ./.github/actions/check-discovery-findings
 
-  deploy-regression:
+  regression-testing:
+    name: Regression Testing
     runs-on: ubuntu-latest
-    needs: code_analysis
+    needs: code-analysis
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -63,19 +65,13 @@ jobs:
           source-environment-label: ${{ env.ENVIRONMENT_DEVELOPMENT_LABEL }}
           destination-environment-label: ${{ env.ENVIRONMENT_REGRESSION_LABEL }}
           include-test-applications: true
-
-  run_regression:
-      runs-on: ubuntu-latest
-      needs: deploy-regression
-      steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      
       - uses: ./.github/actions/regression-testing
 
   deploy-acceptance:
+    name: Release Acceptance
     runs-on: ubuntu-latest
-    needs: run_regression
+    needs: regression-testing
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -86,6 +82,7 @@ jobs:
           destination-environment-label: ${{ env.ENVIRONMENT_ACCEPTANCE_LABEL }}
 
   deploy-dry-run:
+    name: Dry-Run
     runs-on: ubuntu-latest
     needs: deploy-acceptance
     environment: pre-env
@@ -99,6 +96,7 @@ jobs:
           destination-environment-label: ${{ env.ENVIRONMENT_PREPRODUCTION_LABEL }}
 
   deploy-production:
+    name: Go-Live
     runs-on: ubuntu-latest
     needs: deploy-dry-run
     environment: prd-env

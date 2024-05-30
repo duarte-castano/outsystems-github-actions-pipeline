@@ -17,7 +17,7 @@ runs:
     - name: 'Validate Discovey Architecture findings'
       shell: bash
       run: |
-        apps=$(jq -r '.ApplicationVersions[].ApplicationName' "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}" | jq -R . | jq -s .)
+        apps=$(jq -r '.ApplicationVersions[] | select(.IsTestApplication | not) | .ApplicationName' "${{ env.MANIFEST_FILE }}" | jq -R . | jq -s .)
         echo "Applications: $apps"
         python ./scripts/check_discovery_findings.py "${{ env.DISCOVERY_API_URL }}" "${{ env.DISCOVERY_API_KEY }}" "$apps"
 

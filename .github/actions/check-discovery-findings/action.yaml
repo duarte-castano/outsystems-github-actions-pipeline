@@ -1,0 +1,24 @@
+name:  Check Discovery Findings
+description: Validate Discovey Architecture findings
+
+runs: 
+  using: "composite"
+  steps:
+    # Download current pipeline artifacts
+    #- uses: ./.github/actions/download-trigger-manifest
+
+    #- uses: ./.github/actions/install-python-package
+
+    # ******************************************************************
+    # Step: Check Discovery data for application list
+    # ******************************************************************
+    # Check Discovery data for application list
+    # ****************************************************************** 
+    - name: 'Validate Discovey Architecture findings'
+      shell: bash
+      run: |
+        apps=$(jq -r '.ApplicationVersions[].ApplicationName' "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}" | jq -R . | jq -s .)
+        echo "Applications: $apps"
+        python ./scripts/check_discovery_findings.py "${{ env.DISCOVERY_API_URL }}" "${{ env.DISCOVERY_API_KEY }}" "$apps"
+
+        

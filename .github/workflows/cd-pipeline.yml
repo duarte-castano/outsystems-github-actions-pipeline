@@ -32,6 +32,8 @@ env:
   AI_MENTOR_STUDIO_FOLDER: ${{ vars.AI_MENTOR_STUDIO_FOLDER }}
   AI_MENTOR_STUDIO_THRESHOLDS_TECHDEBT_LEVEL: "High"
   AI_MENTOR_STUDIO_THRESHOLDS_SECURITY_FINDINGS_COUNT: 10
+  DISCOVERY_API_KEY: ${{ secrets.DISCOVERY_API_KEY }}
+  DISCOVERY_API_URL: ${{ vars.DISCOVERY_API_URL }}
   OS_PACKAGE_VERSION: ${{ vars.OS_PACKAGE_VERSION }}
   PYTHON_VERSION: ${{ vars.PYTHON_VERSION }}
 
@@ -46,6 +48,8 @@ jobs:
     - uses: ./.github/actions/publish-trigger-manifest
 
     - uses: ./.github/actions/code-analysis
+
+    - uses: ./.github/actions/check-discovery-findings
 
   deploy-regression:
     runs-on: ubuntu-latest

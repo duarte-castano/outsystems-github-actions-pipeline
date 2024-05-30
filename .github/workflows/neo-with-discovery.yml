@@ -19,7 +19,7 @@ env:
   LifeTimeHostname: 'showcase-lt.outsystemsdevopsexperts.com'
   LifeTimeAPIVersion: 2
   AuthorizationToken: ${{ secrets.LIFETIME_SERVICE_ACCOUNT_TOKEN }}
-  DiscoveryAPIKey: ${{ secrets.LIFETIME_DISCOVERY_API_KEY }}
+  DiscoveryAPIKey: ${{ secrets.DISCOVERY_API_KEY }}
   DiscoveryAPIURL: 'https://showcase-dev.outsystemsdevopsexperts.com/Discovery_API/rest/Utility/AllApplications'
   DevelopmentEnvironmentLabel: 'Development'
   RegressionEnvironmentLabel: 'Regression'

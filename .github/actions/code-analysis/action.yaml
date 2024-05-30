@@ -1,0 +1,47 @@
+name:  Code Analysis
+description: Fetch and Validate technical debt data from AI Mentor Studio
+
+runs: 
+  using: "composite"
+  steps:
+    # Download current pipeline artifacts
+    - uses: ./.github/actions/download-trigger-manifest
+
+    - uses: ./.github/actions/install-python-package
+
+    # ******************************************************************
+    # Step: Fetch technical debt data from AI Mentor Studio
+    # ******************************************************************
+    # Fetch technical debt data for application list by leveraging 
+    # AI Mentor Studio API
+    # ******************************************************************
+    - name: 'Fetch technical debt data from AI Mentor Studio'
+      shell: bash
+      run: >
+        python -m outsystems.pipeline.fetch_tech_debt
+        --artifacts "${{ env.ARTIFACTS_FOLDER }}" 
+        --ad_hostname "${{ env.AI_MENTOR_STUDIO_HOSTNAME }}"
+        --activation_code "${{ env.AI_MENTOR_STUDIO_ACTIVATION_CODE }}" 
+        --api_key "${{ env.AI_MENTOR_STUDIO_API_KEY }}"
+        --manifest_file "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}"
+
+    - name: Publish technical debt artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.AI_MENTOR_STUDIO_FOLDER }}
+        path: "${{ env.ARTIFACTS_FOLDER }}/${{ env.AI_MENTOR_STUDIO_FOLDER }}"
+
+    # ******************************************************************
+    # Step: Check technical debt data thresholds
+    # ******************************************************************
+    # Check technical debt data thresholds for application list
+    # ****************************************************************** 
+
+    - name: 'Check technical debt data thresholds'
+      shell: bash
+      run: >
+        python ./scripts/tech_debt_validation.py
+        --manifest_file "${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}"
+        --techdebt_data "${{ env.ARTIFACTS_FOLDER }}/${{ env.AI_MENTOR_STUDIO_FOLDER }}"
+        --max_techdebt_level "${{ env.AI_MENTOR_STUDIO_THRESHOLDS_TECHDEBT_LEVEL }}"
+        --max_security_findings "${{ env.AI_MENTOR_STUDIO_THRESHOLDS_SECURITY_FINDINGS_COUNT }}"

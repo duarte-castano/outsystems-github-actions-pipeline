@@ -26,17 +26,33 @@ env:
   ENVIRONMENT_PRODUCTION_LABEL: ${{ vars.ENVIRONMENT_PRODUCTION_LABEL }}
   CICD_PROBE_ENVIRONMENT_URL: ${{ vars.CICD_PROBE_ENVIRONMENT_URL }}
   BDD_FRAMEWORK_ENVIRONMENT_URL: ${{ vars.BDD_FRAMEWORK_ENVIRONMENT_URL }}
+  AI_MENTOR_STUDIO_HOSTNAME: ${{ vars.BDD_FRAMEWORK_ENVIRONMENT_URL }}
+  AI_MENTOR_STUDIO_ACTIVATION_CODE: ${{ vars.AI_MENTOR_STUDIO_ACTIVATION_CODE }}
+  AI_MENTOR_STUDIO_API_KEY: ${{ vars.AI_MENTOR_STUDIO_API_KEY }}
+  AI_MENTOR_STUDIO_FOLDER: ${{ vars.AI_MENTOR_STUDIO_FOLDER }}
+  AI_MENTOR_STUDIO_THRESHOLDS_TECHDEBT_LEVEL: "High"
+  AI_MENTOR_STUDIO_THRESHOLDS_SECURITY_FINDINGS_COUNT: 10
   OS_PACKAGE_VERSION: ${{ vars.OS_PACKAGE_VERSION }}
   PYTHON_VERSION: ${{ vars.PYTHON_VERSION }}
 
 jobs:
+
+  code_analysis:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - uses: ./.github/actions/publish-trigger-manifest
+
+    - uses: ./.github/actions/code-analysis
+
   deploy-regression:
     runs-on: ubuntu-latest
+    needs: code_analysis
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - uses: ./.github/actions/publish-trigger-manifest
 
       - uses: ./.github/actions/lifetime-deployment
         with:

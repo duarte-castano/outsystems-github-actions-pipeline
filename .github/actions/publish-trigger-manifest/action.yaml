@@ -4,21 +4,12 @@ description: Publish trigger manifest artifact provided as input parameter
 runs: 
   using: "composite"
   steps:
-
-    - name: Create artifacts folder
-      shell: bash
-      run: mkdir -p ${{ env.ARTIFACTS_FOLDER }}
-
-    - name: Create trigger manifest folder
-      shell: bash
-      run: mkdir -p ${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}
-
     - name: Write trigger manifest content to a file
       shell: bash
-      run: echo '${{ github.event.inputs.TriggerManifest }}' > ${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}
+      run: echo '${{ github.event.inputs.TriggerManifest }}' > ${{ env.MANIFEST_FILE }}
 
     - name: Publish trigger manifest
       uses: actions/upload-artifact@v4
       with:
         name: trigger_manifest
-        path: ${{ env.ARTIFACTS_FOLDER }}/${{ env.MANIFEST_FOLDER }}/${{ env.MANIFEST_FILE }}
+        path: ${{ env.MANIFEST_FILE }}
